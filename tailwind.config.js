@@ -4,6 +4,9 @@ module.exports = {
   purge: ['./src/**/*.jsx', './src/**/*.tsx', './src/**/*.js', './src/**/*.ts'],
   theme: {
     extend: {
+      height: {
+        550: '550px',
+      },
       colors: {
         mainGreen: {
           light: '#DFF5F4',
