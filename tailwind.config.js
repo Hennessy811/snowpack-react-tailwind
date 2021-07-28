@@ -16,12 +16,9 @@ module.exports = {
         mainYellow: {
           DEFAULT: '#FFCC44',
         },
-        // mainGreen: {
-        //   DEFAULT: "#00A9AB"
-        // },
       },
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        sans: ['Helvetica Neue', 'Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },

@@ -1,15 +1,28 @@
 import SendIcon from '@shared/icons/SendIcon';
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 const SendRow = ({
   onSubmit,
   disabled,
+  lastMessage,
 }: {
   onSubmit: (message: string) => void;
   disabled: boolean;
+  lastMessage: string;
 }) => {
   const [value, setValue] = useState('');
+
+  const type = useMemo(() => {
+    switch (lastMessage) {
+      case 'Введите ваш email':
+        return 'email';
+      case 'Введите ваш номер телефона':
+        return 'phone';
+      default:
+        return 'text';
+    }
+  }, [lastMessage]);
 
   return (
     <form
@@ -24,9 +37,16 @@ const SendRow = ({
     >
       <input
         disabled={disabled}
-        type="text"
+        type={type}
         className="w-full px-5 py-3 bg-gray-100 appearance-none rounded-xl"
-        placeholder="Введите сообщение"
+        placeholder={
+          type === 'email'
+            ? 'sample@mail.com'
+            : type === 'phone'
+            ? '+7 999 777 66 55'
+            : 'Введите сообщение'
+        }
+        name={type}
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />

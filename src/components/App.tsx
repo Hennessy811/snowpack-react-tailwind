@@ -5,6 +5,7 @@ import SendRow from './SendRow';
 import ClosedHead from './ClosedHead';
 import OpenedHead from './OpenedHead';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { last } from 'lodash';
 
 export interface MessageItem {
   checkbox: null;
@@ -33,7 +34,11 @@ const getDefaultMessage = (msg: string): MessageItem => ({
 
 interface AppProps {}
 
+const FAQ_URL = 'https://detrimax.ru/vopros-otvet';
+
 function App({}: AppProps) {
+  const isFaq = window.location.href.includes(FAQ_URL);
+  // const isFaq = true;
   const [open, setOpen] = useState(false);
   const bottom = useRef<HTMLDivElement>(null);
   const [socketUrl] = useState('ws://wbackend.way2ai.ru:8998/income_message');
@@ -46,6 +51,11 @@ function App({}: AppProps) {
         sendJsonMessage({
           type: 'init',
           payload: '42',
+          session_id: 'simple',
+        });
+        sendJsonMessage({
+          type: 'text',
+          payload: isFaq ? 'FAQ' : 'NOFAQ',
           session_id: 'simple',
         });
       },
@@ -64,6 +74,9 @@ function App({}: AppProps) {
   }, [lastJsonMessage]);
 
   const handleClickSendMessage = (msg: string) => {
+    if (msg === 'Перейти') {
+      window.location.href = FAQ_URL;
+    }
     setMessageHistory([...messageHistory, getDefaultMessage(msg)]);
     sendJsonMessage({
       type: 'text',
@@ -107,6 +120,7 @@ function App({}: AppProps) {
         <SendRow
           disabled={readyState !== ReadyState.OPEN}
           onSubmit={handleClickSendMessage}
+          lastMessage={last(messageHistory.filter((i) => !!i.text))?.text || ''}
         />
       </div>
     </div>
