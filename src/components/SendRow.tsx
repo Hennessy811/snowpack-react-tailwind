@@ -43,7 +43,7 @@ const SendRow = ({
           type === 'email'
             ? 'sample@mail.com'
             : type === 'phone'
-            ? '+7 999 777 66 55'
+            ? '+79997776655'
             : 'Введите сообщение'
         }
         name={type}

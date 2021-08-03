@@ -1,24 +1,36 @@
 import React from 'react';
 
+type Btn =
+  | string
+  | {
+      data: string;
+      text: string;
+    };
+
 const Keyboard = ({
   buttons,
   onClick,
 }: {
-  buttons: string[][] | null;
+  buttons: Btn[][] | null;
   onClick: (message: string) => void;
 }) => {
   if (buttons === null) return null;
 
+  const btnText = (btn: Btn) => {
+    return typeof btn === 'string' ? btn : btn.text;
+  };
+
   return (
     <div className="">
       {buttons.map((row) => (
-        <div>
+        <div key={Math.random()}>
           {row.map((btn) => (
             <div
+              key={btnText(btn)}
               className="px-4 py-3 my-2 transition-all border-2 cursor-pointer hover:text-white hover:bg-mainGreen text-mainGreen border-mainGreen rounded-2xl"
-              onClick={() => onClick(btn)}
+              onClick={() => onClick(typeof btn === 'string' ? btn : btn.data)}
             >
-              {btn}
+              {btnText(btn)}
             </div>
           ))}
         </div>

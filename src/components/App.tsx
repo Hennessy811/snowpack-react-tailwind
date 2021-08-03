@@ -40,8 +40,9 @@ function App({}: AppProps) {
   const isFaq = window.location.href.includes(FAQ_URL);
   // const isFaq = true;
   const [open, setOpen] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
-  const [socketUrl] = useState('ws://wbackend.way2ai.ru:8998/income_message');
+  const [socketUrl] = useState('wss://dwbakend.way2ai.ru/income_message/');
   const [messageHistory, setMessageHistory] = useState<MessageItem[]>([]);
 
   const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(
@@ -49,18 +50,19 @@ function App({}: AppProps) {
     {
       onOpen: () => {
         sendJsonMessage({
-          type: 'init',
-          payload: '42',
-          session_id: 'simple',
-        });
-        sendJsonMessage({
-          type: 'text',
-          payload: isFaq ? 'FAQ' : 'NOFAQ',
+          type: `init`,
+          payload: `${isFaq ? 'YESFAQ' : 'NOFAQ'}`,
           session_id: 'simple',
         });
       },
     },
   );
+
+  useEffect(() => {
+    if (!sessionId && lastJsonMessage?.user_id) {
+      setSessionId(lastJsonMessage.user_id);
+    }
+  }, [lastJsonMessage]);
 
   const scrollToBottom = () => {
     bottom.current?.scrollIntoView({ behavior: 'smooth' });

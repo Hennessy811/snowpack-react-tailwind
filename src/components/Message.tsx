@@ -34,6 +34,7 @@ const Message = ({
       </div>
 
       <Keyboard buttons={message.keyboard} onClick={onClick} />
+      <Keyboard buttons={message.inline_keyboard} onClick={onClick} />
     </div>
   );
 };
