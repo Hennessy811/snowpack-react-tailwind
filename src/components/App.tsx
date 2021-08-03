@@ -37,8 +37,8 @@ interface AppProps {}
 const FAQ_URL = 'https://detrimax.ru/vopros-otvet';
 
 function App({}: AppProps) {
-  const isFaq = window.location.href.includes(FAQ_URL);
-  // const isFaq = true;
+  // const isFaq = window.location.href.includes(FAQ_URL);
+  const isFaq = true;
   const [open, setOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const bottom = useRef<HTMLDivElement>(null);

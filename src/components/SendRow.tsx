@@ -15,6 +15,8 @@ const SendRow = ({
 
   const type = useMemo(() => {
     switch (lastMessage) {
+      case 'Введите ваш вопрос':
+        return 'textarea';
       case 'Введите ваш email':
         return 'email';
       case 'Введите ваш номер телефона':
@@ -26,7 +28,7 @@ const SendRow = ({
 
   return (
     <form
-      className="flex items-center px-5 py-4"
+      className="flex items-end px-5 py-4"
       onSubmit={(e) => {
         e.preventDefault();
         if (!disabled) {
@@ -35,21 +37,31 @@ const SendRow = ({
         }
       }}
     >
-      <input
-        disabled={disabled}
-        type={type}
-        className="w-full px-5 py-3 bg-gray-100 appearance-none rounded-xl"
-        placeholder={
-          type === 'email'
-            ? 'sample@mail.com'
-            : type === 'phone'
-            ? '+79997776655'
-            : 'Введите сообщение'
-        }
-        name={type}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          className="w-full px-5 py-3 bg-gray-100 appearance-none rounded-xl"
+          rows={2}
+          name={type}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      ) : (
+        <input
+          disabled={disabled}
+          type={type}
+          className="w-full px-5 py-3 bg-gray-100 appearance-none rounded-xl"
+          placeholder={
+            type === 'email'
+              ? 'sample@mail.com'
+              : type === 'phone'
+              ? '+79997776655'
+              : 'Введите сообщение'
+          }
+          name={type}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      )}
       <button
         className={clsx(
           'flex items-center justify-center h-12 p-2 ml-4 text-white appearance-none w-14 rounded-2xl ',
