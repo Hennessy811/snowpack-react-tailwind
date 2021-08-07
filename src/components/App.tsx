@@ -6,6 +6,7 @@ import ClosedHead from './ClosedHead';
 import OpenedHead from './OpenedHead';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { last } from 'lodash';
+import type { Btn } from './Keyboard';
 
 export interface MessageItem {
   checkbox: null;
@@ -55,6 +56,13 @@ function App({}: AppProps) {
           session_id: 'simple',
         });
       },
+      reconnectAttempts: 30,
+      reconnectInterval: 500,
+      shouldReconnect: (closeEvent) => {
+        console.log('closed, reconnecting');
+
+        return true;
+      },
     },
   );
 
@@ -75,14 +83,16 @@ function App({}: AppProps) {
     ]);
   }, [lastJsonMessage]);
 
-  const handleClickSendMessage = (msg: string) => {
+  const handleClickSendMessage = (msg: Btn) => {
     if (msg === 'Перейти') {
       window.location.href = FAQ_URL;
     }
-    setMessageHistory([...messageHistory, getDefaultMessage(msg)]);
+    // @ts-ignore
+    setMessageHistory([...messageHistory, getDefaultMessage(msg.text || msg)]);
     sendJsonMessage({
       type: 'text',
-      payload: msg,
+      // @ts-ignore
+      payload: msg.data || msg,
       session_id: 'simple',
     });
   };

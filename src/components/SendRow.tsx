@@ -17,9 +17,9 @@ const SendRow = ({
     switch (lastMessage) {
       case 'Введите ваш вопрос':
         return 'textarea';
-      case 'Введите ваш email':
+      case 'Введите адрес Вашей электронной почты:':
         return 'email';
-      case 'Введите ваш номер телефона':
+      case 'Введите Ваш номер телефона:':
         return 'phone';
       default:
         return 'text';

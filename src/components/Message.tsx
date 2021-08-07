@@ -1,14 +1,15 @@
 import clsx from 'clsx';
 import React from 'react';
 import type { MessageItem } from './App';
-import Keyboard from './Keyboard';
+import Keyboard, { Btn } from './Keyboard';
+import Linkify from 'react-linkify';
 
 const Message = ({
   message,
   onClick,
 }: {
   message: MessageItem;
-  onClick: (msg: string) => void;
+  onClick: (msg: Btn) => void;
 }) => {
   const { text, createdBy } = message;
   const author = createdBy === 'support' ? 'support' : 'user';
@@ -29,7 +30,7 @@ const Message = ({
               : 'shadow-md border-gray-100 border rounded-bl-3xl rounded-br-sm',
           )}
         >
-          {text}
+          <Linkify>{text}</Linkify>
         </div>
       </div>
 

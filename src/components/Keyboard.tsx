@@ -1,6 +1,6 @@
 import React from 'react';
 
-type Btn =
+export type Btn =
   | string
   | {
       data: string;
@@ -12,7 +12,7 @@ const Keyboard = ({
   onClick,
 }: {
   buttons: Btn[][] | null;
-  onClick: (message: string) => void;
+  onClick: (message: Btn) => void;
 }) => {
   if (buttons === null) return null;
 
@@ -28,7 +28,7 @@ const Keyboard = ({
             <div
               key={btnText(btn)}
               className="px-4 py-3 my-2 transition-all border-2 cursor-pointer hover:text-white hover:bg-mainGreen text-mainGreen border-mainGreen rounded-2xl"
-              onClick={() => onClick(typeof btn === 'string' ? btn : btn.data)}
+              onClick={() => onClick(btn)}
             >
               {btnText(btn)}
             </div>
