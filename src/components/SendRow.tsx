@@ -15,7 +15,7 @@ const SendRow = ({
 
   const type = useMemo(() => {
     switch (lastMessage) {
-      case 'Введите ваш вопрос':
+      case 'Задайте Ваш вопрос:':
         return 'textarea';
       case 'Введите адрес Вашей электронной почты:':
         return 'email';
