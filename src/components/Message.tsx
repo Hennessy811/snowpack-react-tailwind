@@ -24,7 +24,7 @@ const Message = ({
       >
         <div
           className={clsx(
-            'py-3 px-4 rounded-tl-3xl rounded-tr-3xl',
+            'py-3 px-4 rounded-tl-3xl rounded-tr-3xl message',
             author === 'support'
               ? 'bg-mainGreen-light rounded-br-3xl rounded-bl-sm'
               : 'shadow-md border-gray-100 border rounded-bl-3xl rounded-br-sm',

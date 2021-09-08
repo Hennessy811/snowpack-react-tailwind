@@ -15,7 +15,7 @@ const SendRow = ({
 
   const type = useMemo(() => {
     switch (lastMessage) {
-      case 'Введите ваш вопрос':
+      case 'Задайте Ваш вопрос:':
         return 'textarea';
       case 'Введите адрес Вашей электронной почты:':
         return 'email';
@@ -40,7 +40,8 @@ const SendRow = ({
       {type === 'textarea' ? (
         <textarea
           className="w-full px-5 py-3 bg-gray-100 appearance-none rounded-xl"
-          rows={2}
+          placeholder="Например, Детримакс актив доза"
+          rows={3}
           name={type}
           value={value}
           onChange={(e) => setValue(e.target.value)}
