@@ -28,7 +28,7 @@ const SendRow = ({
 
   return (
     <form
-      className="flex items-end px-5 py-4"
+      className="widget-flex widget-items-end widget-px-5 widget-py-4"
       onSubmit={(e) => {
         e.preventDefault();
         if (!disabled) {
@@ -39,7 +39,7 @@ const SendRow = ({
     >
       {type === 'textarea' ? (
         <textarea
-          className="w-full px-5 py-3 bg-gray-100 appearance-none rounded-xl"
+          className="widget-w-full widget-px-5 widget-py-3 widget-bg-gray-100 widget-appearance-none widget-rounded-xl"
           placeholder="Например, Детримакс актив доза"
           rows={3}
           name={type}
@@ -50,7 +50,7 @@ const SendRow = ({
         <input
           disabled={disabled}
           type={type}
-          className="w-full px-5 py-3 bg-gray-100 appearance-none rounded-xl"
+          className="widget-w-full widget-px-5 widget-py-3 widget-bg-gray-100 widget-appearance-none widget-rounded-xl"
           placeholder={
             type === 'email'
               ? 'sample@mail.com'
@@ -65,13 +65,15 @@ const SendRow = ({
       )}
       <button
         className={clsx(
-          'flex items-center justify-center h-12 p-2 ml-4 text-white appearance-none w-14 rounded-2xl ',
-          disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-mainGreen',
+          'widget-flex widget-items-center widget-justify-center widget-h-12 widget-p-2 widget-ml-4 widget-text-white widget-appearance-none widget-w-14 widget-rounded-2xl ',
+          disabled
+            ? 'widget-bg-gray-200 widget-cursor-not-allowed'
+            : 'widget-bg-mainGreen',
         )}
         type="submit"
         disabled={disabled}
       >
-        <SendIcon className="w-6 h-6" />
+        <SendIcon className="widget-w-6 widget-h-6" />
       </button>
     </form>
   );

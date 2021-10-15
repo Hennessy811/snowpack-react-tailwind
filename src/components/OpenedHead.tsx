@@ -4,18 +4,18 @@ import React from 'react';
 
 const OpenedHead = ({ onClose }: { onClose: () => void }) => {
   return (
-    <div className="flex items-center justify-between w-full p-3 rounded-tl-3xl rounded-tr-3xl bg-mainGreen">
-      <div className="p-3 text-white rounded-full bg-mainYellow">
-        <ChatIcon className="w-6 h-6" />
+    <div className="widget-flex widget-items-center widget-justify-between widget-w-full widget-p-3 widget-rounded-tl-3xl widget-rounded-tr-3xl widget-bg-mainGreen">
+      <div className="widget-p-3 widget-text-white widget-rounded-full widget-bg-mainYellow">
+        <ChatIcon className="widget-w-6 widget-h-6" />
       </div>
-      <p className="mx-6 text-xl font-medium text-center text-white">
-        Ваш эл. помощник
+      <p className="widget-mx-6 widget-text-xl widget-font-medium widget-text-center widget-text-white">
+        D3-бот
       </p>
       <div
-        className="p-3 text-white cursor-pointer hover:scale-105"
+        className="widget-p-3 widget-text-white widget-cursor-pointer hover:widget-scale-105"
         onClick={() => onClose()}
       >
-        <CloseIcon className="w-4 h-4 " />
+        <CloseIcon className="widget-w-4 widget-h-4 " />
       </div>
     </div>
   );

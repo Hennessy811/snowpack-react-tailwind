@@ -12,15 +12,17 @@ const ClosedHead = ({
   return (
     <div
       className={clsx(
-        'flex items-center border border-gray-50 p-3 text-xl transition-all shadow-lg cursor-pointer rounded-2xl hover:shadow-2xl',
-        open && 'hidden',
+        'widget-flex widget-items-center widget-bg-white widget-border widget-border-gray-50 widget-p-3 widget-text-xl widget-transition-all widget-shadow-lg widget-cursor-pointer widget-rounded-2xl hover:widget-shadow-2xl',
+        open && 'widget-hidden',
       )}
       onClick={() => onOpen()}
     >
-      <div className="p-3 text-white rounded-full bg-mainYellow">
-        <ChatIcon className="w-6 h-6" />
+      <div className="widget-p-3 widget-text-white widget-rounded-full widget-bg-mainYellow">
+        <ChatIcon className="widget-w-6 widget-h-6" />
       </div>
-      <p className="mx-5 font-medium text-mainGreen">Задайте вопрос</p>
+      <p className="widget-mx-5 widget-font-medium widget-text-mainGreen">
+        Задайте вопрос
+      </p>
     </div>
   );
 };

@@ -18,16 +18,16 @@ const Message = ({
     <div>
       <div
         className={clsx(
-          'flex my-2 max-w-xs',
-          author === 'user' && 'justify-end',
+          'widget-flex widget-my-2 widget-max-w-xs',
+          author === 'user' && 'widget-justify-end',
         )}
       >
         <div
           className={clsx(
-            'py-3 px-4 rounded-tl-3xl rounded-tr-3xl message',
+            'widget-py-3 widget-px-4 widget-rounded-tl-3xl widget-rounded-tr-3xl message',
             author === 'support'
-              ? 'bg-mainGreen-light rounded-br-3xl rounded-bl-sm'
-              : 'shadow-md border-gray-100 border rounded-bl-3xl rounded-br-sm',
+              ? 'widget-bg-mainGreen-light widget-rounded-br-3xl widget-rounded-bl-sm'
+              : 'widget-shadow-md widget-border-gray-100 widget-border widget-rounded-bl-3xl widget-rounded-br-sm',
           )}
         >
           <Linkify>{text}</Linkify>

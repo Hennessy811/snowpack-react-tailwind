@@ -38,8 +38,8 @@ interface AppProps {}
 const FAQ_URL = 'https://detrimax.ru/vopros-otvet';
 
 function App({}: AppProps) {
-  // const isFaq = window.location.href.includes(FAQ_URL);
-  const isFaq = true;
+  const isFaq = window.location.href.includes(FAQ_URL);
+  // const isFaq = false;
   const [open, setOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
@@ -102,19 +102,33 @@ function App({}: AppProps) {
   }, [messageHistory]);
 
   return (
-    <div className="fixed z-10 right-2 bottom-2">
-      <ClosedHead open={open} onOpen={() => setOpen(true)} />
+    <div
+      className="widget-fixed widget-right-2 widget-bottom-2"
+      style={{ zIndex: 9999999 }}
+    >
+      <ClosedHead
+        open={open}
+        onOpen={() => {
+          setOpen(true);
+          // ym(71865553, 'reachGoal', 'widget_open');
+        }}
+      />
 
       <div
         className={clsx(
-          'shadow-lg rounded-3xl max-w-md w-full',
-          !open && 'hidden',
+          'widget-shadow-lg widget-rounded-3xl widget-max-w-md widget-w-full',
+          !open && 'widget-hidden',
         )}
       >
-        <OpenedHead onClose={() => setOpen(false)} />
+        <OpenedHead
+          onClose={() => {
+            setOpen(false);
+            // ym(71865553, 'reachGoal', 'widget_close');
+          }}
+        />
 
-        <div className="w-full pt-0 pl-5 bg-white rounded-bl-3xl rounded-br-3xl h-550">
-          <div className="flex flex-col w-full h-full pr-5 overflow-y-auto">
+        <div className="widget-w-full widget-pt-0 widget-pl-5 widget-bg-white widget-rounded-bl-3xl widget-rounded-br-3xl widget-h-550">
+          <div className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto">
             {messageHistory
               .filter((i) => !!i.text)
               .map((message) => (
