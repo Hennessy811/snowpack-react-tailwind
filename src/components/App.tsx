@@ -35,7 +35,9 @@ const getDefaultMessage = (msg: string): MessageItem => ({
 
 interface AppProps {}
 
-const FAQ_URL = 'https://detrimax.ru/vopros-otvet';
+const FAQ_URL = window.location.href.includes('detrimax.itsft')
+  ? 'https://detrimax.itsft.ru/vopros-otvet'
+  : 'https://detrimax.ru/vopros-otvet';
 
 function App({}: AppProps) {
   const isFaq = window.location.href.includes(FAQ_URL);
@@ -103,7 +105,7 @@ function App({}: AppProps) {
 
   return (
     <div
-      className="widget-fixed widget-right-2 widget-bottom-2"
+      className="widget-fixed widget-right-2 widget-bottom-1"
       style={{ zIndex: 9999999 }}
     >
       <ClosedHead
@@ -127,7 +129,10 @@ function App({}: AppProps) {
           }}
         />
 
-        <div className="widget-w-full widget-pt-0 widget-pl-5 widget-bg-white widget-rounded-bl-3xl widget-rounded-br-3xl widget-h-550">
+        <div
+          className="widget-w-full widget-pt-0 widget-pl-5 widget-bg-white widget-rounded-bl-3xl widget-rounded-br-3xl widget-h-550"
+          style={{ maxHeight: '65vh' }}
+        >
           <div className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto">
             {messageHistory
               .filter((i) => !!i.text)
