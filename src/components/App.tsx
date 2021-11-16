@@ -105,8 +105,8 @@ function App({}: AppProps) {
 
   return (
     <div
-      className="widget-fixed widget-right-2 widget-bottom-1"
-      style={{ zIndex: 9999999 }}
+      className="widget-fixed widget-right-2"
+      style={{ zIndex: 9999999, bottom: 'calc(10vh + 8px)' }}
     >
       <ClosedHead
         open={open}
@@ -118,9 +118,12 @@ function App({}: AppProps) {
 
       <div
         className={clsx(
-          'widget-shadow-lg widget-rounded-3xl widget-max-w-md widget-w-full',
+          'widget-shadow-lg widget-rounded-3xl widget-bg-white widget-w-full',
           !open && 'widget-hidden',
         )}
+        style={{
+          maxWidth: 443,
+        }}
       >
         <OpenedHead
           onClose={() => {
@@ -131,9 +134,9 @@ function App({}: AppProps) {
 
         <div
           className="widget-w-full widget-pt-0 widget-pl-5 widget-bg-white widget-rounded-bl-3xl widget-rounded-br-3xl widget-h-550"
-          style={{ maxHeight: '65vh' }}
+          style={{ maxHeight: '45vh' }}
         >
-          <div className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto">
+          <div className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto widget-overflow-x-hidden">
             {messageHistory
               .filter((i) => !!i.text)
               .map((message) => (

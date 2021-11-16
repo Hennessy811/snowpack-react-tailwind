@@ -15,7 +15,9 @@ const Message = ({
   const author = createdBy === 'support' ? 'support' : 'user';
 
   return (
-    <div>
+    <div
+      className={clsx('widget-flex', author === 'user' && 'widget-justify-end')}
+    >
       <div
         className={clsx(
           'widget-flex widget-my-2 widget-max-w-xs',

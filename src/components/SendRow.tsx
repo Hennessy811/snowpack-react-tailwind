@@ -50,7 +50,7 @@ const SendRow = ({
         <input
           disabled={disabled}
           type={type}
-          className="widget-w-full widget-px-5 widget-py-3 widget-bg-gray-100 widget-appearance-none widget-rounded-xl"
+          className="widget-w-full widget-h-12 widget-px-5 widget-py-3 widget-bg-gray-100 widget-appearance-none widget-rounded-xl"
           placeholder={
             type === 'email'
               ? 'sample@mail.com'
