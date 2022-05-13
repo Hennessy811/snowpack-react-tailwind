@@ -48,14 +48,26 @@ const FAQ_URL = window.location.href.includes('detrimax.itsft')
 
 function App({}: AppProps) {
   const [open, setOpen] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionId, _setSessionId] = useState<string | null>(
+    localStorage.getItem('sessionId') || '',
+  );
   const bottom = useRef<HTMLDivElement>(null);
   const view = useRef<HTMLDivElement>(null);
   // const bottom = useRef<HTMLDivElement>(null);
-  const [socketUrl] = useState('wss://dwbakend.way2ai.ru/income_message/');
+  const [socketUrl] = useState(
+    'wss://dwbakend.way2ai.ru/income_message/' +
+      (sessionId ? `?sessionId=${sessionId}` : ''),
+  );
   const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(
     getLocalHistory(),
   );
+
+  console.log(socketUrl);
+
+  const setSessionId = (id: string) => {
+    localStorage.setItem('sessionId', id);
+    _setSessionId(id);
+  };
 
   const setMessageHistory = (messages: MessageItem[]): void => {
     localStorage.setItem('messages', JSON.stringify(messages));
@@ -66,13 +78,12 @@ function App({}: AppProps) {
     socketUrl,
     {
       onOpen: () => {
-        // if (!messageHistory.length) {
         sendJsonMessage({
           type: `init`,
           payload: `${'YESFAQ'}`,
-          session_id: 'simple',
+          session_id: sessionId,
+          user_id: sessionId,
         });
-        // }
       },
       reconnectAttempts: 30,
       reconnectInterval: 500,
@@ -106,14 +117,23 @@ function App({}: AppProps) {
     if (msg === 'Перейти') {
       window.location.href = FAQ_URL;
     }
+
     // @ts-ignore
     setMessageHistory([...messageHistory, getDefaultMessage(msg.text || msg)]);
     sendJsonMessage({
       type: 'text',
       // @ts-ignore
       payload: msg.data || msg,
-      session_id: 'simple',
+      session_id: sessionId,
     });
+
+    setTimeout(() => {
+      // @ts-ignore
+      if (msg?.data) {
+        // @ts-ignore
+        window.location.href = msg.data;
+      }
+    }, 200);
   };
 
   useEffect(() => {

@@ -63,6 +63,7 @@ module.exports = {
           light: '#DFF5F4',
           DEFAULT: '#3E8896',
           old: '#00A9AB',
+          buttons: 'rgb(62, 136, 150)',
         },
         mainYellow: {
           DEFAULT: '#FFCC44',

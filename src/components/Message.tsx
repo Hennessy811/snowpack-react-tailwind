@@ -29,9 +29,9 @@ const Message = ({
       >
         <div
           className={clsx(
-            'widget-py-3 widget-px-4 widget-rounded-tl-3xl widget-rounded-tr-3xl message',
+            'widget-py-4 widget-px-4 widget-rounded-tl-3xl widget-rounded-tr-3xl message',
             author === 'support'
-              ? 'widget-bg-mainGreen-light widget-rounded-br-3xl widget-rounded-bl-sm'
+              ? 'widget-bg-mainGreen-light widget-shadow-md widget-font-medium widget-rounded-br-3xl widget-rounded-bl-sm'
               : 'widget-shadow-md widget-border-gray-100 widget-border widget-rounded-bl-3xl widget-rounded-br-sm',
           )}
         >

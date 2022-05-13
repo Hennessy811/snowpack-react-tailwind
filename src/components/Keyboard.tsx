@@ -27,7 +27,7 @@ const Keyboard = ({
           {row.map((btn) => (
             <div
               key={btnText(btn)}
-              className="widget-px-4 widget-py-3 widget-my-2 widget-transition-all widget-border-2 widget-cursor-pointer hover:widget-text-white hover:widget-bg-mainGreen widget-text-mainGreen widget-border-mainGreen widget-rounded-2xl"
+              className="widget-px-4 widget-py-3 widget-bg-mainGreen-buttons widget-bg-opacity-20 widget-my-2 widget-transition-all widget-cursor-pointer hover:widget-text-white hover:widget-bg-mainGreen widget-text-mainGreen widget-rounded-2xl"
               onClick={() => onClick(btn)}
             >
               {btnText(btn)}

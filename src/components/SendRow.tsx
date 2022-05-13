@@ -28,7 +28,7 @@ const SendRow = ({
 
   return (
     <form
-      className="widget-flex widget-items-end widget-px-5 widget-py-4"
+      className="widget-flex widget-text-lg widget-leading-6 widget-items-end widget-px-5 widget-py-4"
       onSubmit={(e) => {
         e.preventDefault();
         if (!disabled) {
