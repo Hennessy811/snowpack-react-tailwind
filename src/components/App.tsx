@@ -33,6 +33,13 @@ const getDefaultMessage = (msg: string): MessageItem => ({
   video_url: null,
 });
 
+const getLocalHistory = () => {
+  const history = JSON.parse(
+    localStorage.getItem('messages') || '[]',
+  ) as MessageItem[];
+  return history;
+};
+
 interface AppProps {}
 
 const FAQ_URL = window.location.href.includes('detrimax.itsft')
@@ -40,23 +47,32 @@ const FAQ_URL = window.location.href.includes('detrimax.itsft')
   : 'https://detrimax.ru/vopros-otvet';
 
 function App({}: AppProps) {
-  const isFaq = window.location.href.includes(FAQ_URL);
-  // const isFaq = false;
   const [open, setOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
+  const view = useRef<HTMLDivElement>(null);
+  // const bottom = useRef<HTMLDivElement>(null);
   const [socketUrl] = useState('wss://dwbakend.way2ai.ru/income_message/');
-  const [messageHistory, setMessageHistory] = useState<MessageItem[]>([]);
+  const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(
+    getLocalHistory(),
+  );
+
+  const setMessageHistory = (messages: MessageItem[]): void => {
+    localStorage.setItem('messages', JSON.stringify(messages));
+    _setMessageHistory(messages);
+  };
 
   const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(
     socketUrl,
     {
       onOpen: () => {
+        // if (!messageHistory.length) {
         sendJsonMessage({
           type: `init`,
-          payload: `${isFaq ? 'YESFAQ' : 'NOFAQ'}`,
+          payload: `${'YESFAQ'}`,
           session_id: 'simple',
         });
+        // }
       },
       reconnectAttempts: 30,
       reconnectInterval: 500,
@@ -75,7 +91,8 @@ function App({}: AppProps) {
   }, [lastJsonMessage]);
 
   const scrollToBottom = () => {
-    bottom.current?.scrollIntoView({ behavior: 'smooth' });
+    view.current?.scrollBy({ top: 100, behavior: 'smooth' });
+    // bottom.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -105,7 +122,7 @@ function App({}: AppProps) {
 
   return (
     <div
-      className="widget-fixed widget-right-2"
+      className="widget-fixed widget-right-2 widget-ml-2"
       style={{ zIndex: 9999999, bottom: 'calc(10vh + 8px)' }}
     >
       <ClosedHead
@@ -122,7 +139,7 @@ function App({}: AppProps) {
           !open && 'widget-hidden',
         )}
         style={{
-          maxWidth: 443,
+          maxWidth: 380,
         }}
       >
         <OpenedHead
@@ -136,7 +153,14 @@ function App({}: AppProps) {
           className="widget-w-full widget-pt-0 widget-pl-5 widget-bg-white widget-rounded-bl-3xl widget-rounded-br-3xl widget-h-550"
           style={{ maxHeight: '45vh' }}
         >
-          <div className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto widget-overflow-x-hidden">
+          <div
+            className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto widget-overflow-x-hidden"
+            ref={view}
+            onScroll={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             {messageHistory
               .filter((i) => !!i.text)
               .map((message) => (

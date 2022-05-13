@@ -45,6 +45,15 @@ const SendRow = ({
           name={type}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              if (!disabled) {
+                onSubmit(value);
+                setValue('');
+              }
+            }
+          }}
         />
       ) : (
         <input

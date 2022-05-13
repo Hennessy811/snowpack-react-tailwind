@@ -16,11 +16,14 @@ const Message = ({
 
   return (
     <div
-      className={clsx('widget-flex', author === 'user' && 'widget-justify-end')}
+      className={clsx(
+        'widget-flex widget-flex-col',
+        author === 'user' && 'widget-justify-end',
+      )}
     >
       <div
         className={clsx(
-          'widget-flex widget-my-2 widget-max-w-xs',
+          'widget-flex widget-my-2', // widget-max-w-md
           author === 'user' && 'widget-justify-end',
         )}
       >

@@ -21,7 +21,7 @@ const Keyboard = ({
   };
 
   return (
-    <div className="">
+    <div className="widget-self-end" style={{ maxWidth: '70%' }}>
       {buttons.map((row) => (
         <div key={Math.random()}>
           {row.map((btn) => (
