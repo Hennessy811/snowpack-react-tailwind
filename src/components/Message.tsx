@@ -1,15 +1,17 @@
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import React from 'react';
+import Linkify from 'react-linkify';
+
 import type { MessageItem } from './App';
 import Keyboard, { Btn } from './Keyboard';
-import Linkify from 'react-linkify';
-import { motion } from 'framer-motion';
 
 const Message = ({
   message,
   onClick,
 }: {
   message: MessageItem;
+  // eslint-disable-next-line no-unused-vars
   onClick: (msg: Btn) => void;
 }) => {
   const { text, createdBy } = message;

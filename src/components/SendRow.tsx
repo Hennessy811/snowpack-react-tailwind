@@ -1,12 +1,13 @@
-import SendIcon from '@shared/icons/SendIcon';
 import clsx from 'clsx';
 import React, { useMemo, useState } from 'react';
+import SendIcon from 'shared/icons/SendIcon';
 
 const SendRow = ({
   onSubmit,
   disabled,
   lastMessage,
 }: {
+  // eslint-disable-next-line no-unused-vars
   onSubmit: (message: string) => void;
   disabled: boolean;
   lastMessage: string;

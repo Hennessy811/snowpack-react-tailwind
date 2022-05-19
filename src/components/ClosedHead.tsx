@@ -1,7 +1,7 @@
-import ChatIcon from '@shared/icons/ChatIcon';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React from 'react';
+import ChatIcon from 'shared/icons/ChatIcon';
 
 const ClosedHead = ({ onOpen }: { onOpen: () => void }) => {
   return (

@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import Message from './Message';
-import SendRow from './SendRow';
-import ClosedHead from './ClosedHead';
-import OpenedHead from './OpenedHead';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
-import { last } from 'lodash';
-import type { Btn } from './Keyboard';
 import { AnimatePresence, motion } from 'framer-motion';
+import { last } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+
+import ClosedHead from './ClosedHead';
+import type { Btn } from './Keyboard';
+import Message from './Message';
+import OpenedHead from './OpenedHead';
+import SendRow from './SendRow';
 
 export interface MessageItem {
   checkbox: null;
@@ -35,19 +36,15 @@ const getDefaultMessage = (msg: string): MessageItem => ({
 });
 
 const getLocalHistory = () => {
-  const history = JSON.parse(
-    localStorage.getItem('messages') || '[]',
-  ) as MessageItem[];
+  const history = JSON.parse(localStorage.getItem('messages') || '[]') as MessageItem[];
   return history;
 };
-
-interface AppProps {}
 
 const FAQ_URL = window.location.href.includes('detrimax.itsft')
   ? 'https://detrimax.itsft.ru/vopros-otvet'
   : 'https://detrimax.ru/vopros-otvet';
 
-function App({}: AppProps) {
+function App() {
   const [open, setOpen] = useState(false);
   const [sessionId, _setSessionId] = useState<string | null>(
     localStorage.getItem('sessionId') || '',
@@ -59,9 +56,7 @@ function App({}: AppProps) {
     'wss://dwbakend.way2ai.ru/income_message/' +
       (sessionId ? `?sessionId=${sessionId}` : ''),
   );
-  const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(
-    getLocalHistory(),
-  );
+  const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(getLocalHistory());
 
   console.log(socketUrl);
 
@@ -75,26 +70,23 @@ function App({}: AppProps) {
     _setMessageHistory(messages);
   };
 
-  const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(
-    socketUrl,
-    {
-      onOpen: () => {
-        sendJsonMessage({
-          type: `init`,
-          payload: `${'YESFAQ'}`,
-          session_id: sessionId,
-          user_id: sessionId,
-        });
-      },
-      reconnectAttempts: 30,
-      reconnectInterval: 500,
-      shouldReconnect: (closeEvent) => {
-        console.log('closed, reconnecting');
-
-        return true;
-      },
+  const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
+    onOpen: () => {
+      sendJsonMessage({
+        type: `init`,
+        payload: `${'YESFAQ'}`,
+        session_id: sessionId,
+        user_id: sessionId,
+      });
     },
-  );
+    reconnectAttempts: 30,
+    reconnectInterval: 500,
+    shouldReconnect: () => {
+      console.log('closed, reconnecting');
+
+      return true;
+    },
+  });
 
   useEffect(() => {
     if (!sessionId && lastJsonMessage?.user_id) {
@@ -108,10 +100,7 @@ function App({}: AppProps) {
   };
 
   useEffect(() => {
-    setMessageHistory([
-      ...messageHistory,
-      { ...lastJsonMessage, createdBy: 'support' },
-    ]);
+    setMessageHistory([...messageHistory, { ...lastJsonMessage, createdBy: 'support' }]);
 
     if (lastJsonMessage?.user_id !== sessionId) {
       setMessageHistory([]);
@@ -217,9 +206,7 @@ function App({}: AppProps) {
             <SendRow
               disabled={readyState !== ReadyState.OPEN}
               onSubmit={handleClickSendMessage}
-              lastMessage={
-                last(messageHistory.filter((i) => !!i.text))?.text || ''
-              }
+              lastMessage={last(messageHistory.filter((i) => !!i.text))?.text || ''}
             />
           </motion.div>
         )}

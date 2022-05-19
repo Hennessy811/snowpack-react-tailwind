@@ -1,7 +1,10 @@
-import ChatIcon from '@shared/icons/ChatIcon';
-import CloseIcon from '@shared/icons/CloseIcon';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/jsx-no-comment-textnodes */
 import { motion } from 'framer-motion';
 import React from 'react';
+import ChatIcon from 'shared/icons/ChatIcon';
+import CloseIcon from 'shared/icons/CloseIcon';
 
 const OpenedHead = ({ onClose }: { onClose: () => void }) => {
   return (

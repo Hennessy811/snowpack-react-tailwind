@@ -1,33 +1,13 @@
-# ✨ Boilerplate Snowpack + React + Typescript + Tailwindcss
+# Vite + React + Typescript + Eslint + Prettier
 
-> Create using create-snowpack-app CLI
+A starter for React with Typescript with the fast Vite and all static code testing with Eslint and formatting with Prettier.
 
-## In this boilerplate
+I found out about Vite and I wanted to have a boilerplate for the technologies that I use. You can find more about these in the following links: [Vite](https://github.com/vitejs/vite), [React](https://reactjs.org/), [Typescript](https://www.typescriptlang.org/), [Eslint](https://eslint.org/), [Prettier](https://prettier.io/).
 
-- Snowpack 3
-- React 17
-- Typescript 4
-- Tailwind 2
-- Prettier, PostCSS ..
+## Installation
 
-### npm start
+Clone the repo and run `yarn install`
 
-Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+## Start
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
-
-### npm run build
-
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
-
-**For the best production performance:** Add a build bundler plugin like "@snowpack/plugin-webpack" to your `snowpack.config.js` config file.
-
-### npm test
-
-Launches the application test runner.
-Run with the `--watch` flag (`npm test -- --watch`) to run in interactive watch mode.
-
-Feel free to fork and add more features
+After the successfull installation of the packages: `yarn dev`
