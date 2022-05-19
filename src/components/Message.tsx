@@ -3,6 +3,7 @@ import React from 'react';
 import type { MessageItem } from './App';
 import Keyboard, { Btn } from './Keyboard';
 import Linkify from 'react-linkify';
+import { motion } from 'framer-motion';
 
 const Message = ({
   message,
@@ -15,7 +16,11 @@ const Message = ({
   const author = createdBy === 'support' ? 'support' : 'user';
 
   return (
-    <div
+    <motion.div
+      layout
+      initial={{ opacity: 0, x: author === 'user' ? -100 : 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.2 }}
       className={clsx(
         'widget-flex widget-flex-col',
         author === 'user' && 'widget-justify-end',
@@ -29,7 +34,7 @@ const Message = ({
       >
         <div
           className={clsx(
-            'widget-py-4 widget-px-4 widget-rounded-tl-3xl widget-rounded-tr-3xl message',
+            'widget-py-4 widget-px-4 widget-text-lg widget-rounded-tl-3xl widget-rounded-tr-3xl message',
             author === 'support'
               ? 'widget-bg-mainGreen-light widget-shadow-md widget-font-medium widget-rounded-br-3xl widget-rounded-bl-sm'
               : 'widget-shadow-md widget-border-gray-100 widget-border widget-rounded-bl-3xl widget-rounded-br-sm',
@@ -41,7 +46,7 @@ const Message = ({
 
       <Keyboard buttons={message.keyboard} onClick={onClick} />
       <Keyboard buttons={message.inline_keyboard} onClick={onClick} />
-    </div>
+    </motion.div>
   );
 };
 

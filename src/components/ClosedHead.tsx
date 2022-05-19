@@ -1,19 +1,17 @@
 import ChatIcon from '@shared/icons/ChatIcon';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import React from 'react';
 
-const ClosedHead = ({
-  open,
-  onOpen,
-}: {
-  open: boolean;
-  onOpen: () => void;
-}) => {
+const ClosedHead = ({ onOpen }: { onOpen: () => void }) => {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
       className={clsx(
         'widget-flex widget-items-center widget-bg-white widget-border widget-border-gray-50 widget-p-3 widget-text-xl widget-transition-all widget-shadow-lg widget-cursor-pointer widget-rounded-2xl hover:widget-shadow-2xl',
-        open && 'widget-hidden',
       )}
       onClick={() => onOpen()}
     >
@@ -23,7 +21,7 @@ const ClosedHead = ({
       <p className="widget-mx-5 widget-font-medium widget-text-mainGreen">
         Задайте вопрос
       </p>
-    </div>
+    </motion.div>
   );
 };
 

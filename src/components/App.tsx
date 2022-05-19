@@ -7,6 +7,7 @@ import OpenedHead from './OpenedHead';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { last } from 'lodash';
 import type { Btn } from './Keyboard';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export interface MessageItem {
   checkbox: null;
@@ -97,7 +98,7 @@ function App({}: AppProps) {
 
   useEffect(() => {
     if (!sessionId && lastJsonMessage?.user_id) {
-      setSessionId(lastJsonMessage.user_id);
+      setSessionId(lastJsonMessage?.user_id);
     }
   }, [lastJsonMessage]);
 
@@ -111,6 +112,11 @@ function App({}: AppProps) {
       ...messageHistory,
       { ...lastJsonMessage, createdBy: 'support' },
     ]);
+
+    if (lastJsonMessage?.user_id !== sessionId) {
+      setMessageHistory([]);
+      setSessionId(lastJsonMessage?.user_id);
+    }
   }, [lastJsonMessage]);
 
   const handleClickSendMessage = (msg: Btn) => {
@@ -140,67 +146,84 @@ function App({}: AppProps) {
     scrollToBottom();
   }, [messageHistory]);
 
+  useEffect(() => {
+    if (open) {
+      bottom.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [open]);
+
   return (
     <div
       className="widget-fixed widget-right-2 widget-ml-2"
       style={{ zIndex: 9999999, bottom: 'calc(10vh + 8px)' }}
     >
-      <ClosedHead
-        open={open}
-        onOpen={() => {
-          setOpen(true);
-          // ym(71865553, 'reachGoal', 'widget_open');
-        }}
-      />
-
-      <div
-        className={clsx(
-          'widget-shadow-lg widget-rounded-3xl widget-bg-white widget-w-full',
-          !open && 'widget-hidden',
+      <AnimatePresence>
+        {!open ? (
+          <ClosedHead
+            onOpen={() => {
+              setOpen(true);
+            }}
+          />
+        ) : (
+          <OpenedHead
+            onClose={() => {
+              setOpen(false);
+            }}
+          />
         )}
-        style={{
-          maxWidth: 380,
-        }}
-      >
-        <OpenedHead
-          onClose={() => {
-            setOpen(false);
-            // ym(71865553, 'reachGoal', 'widget_close');
-          }}
-        />
+      </AnimatePresence>
 
-        <div
-          className="widget-w-full widget-pt-0 widget-pl-5 widget-bg-white widget-rounded-bl-3xl widget-rounded-br-3xl widget-h-550"
-          style={{ maxHeight: '45vh' }}
-        >
-          <div
-            className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto widget-overflow-x-hidden"
-            ref={view}
-            onScroll={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ duration: 0.2 }}
+            className={clsx(
+              'widget-shadow-lg widget-rounded-3xl widget-bg-white widget-w-full',
+              // !open && 'widget-hidden',
+            )}
+            style={{
+              maxWidth: 380,
             }}
           >
-            {messageHistory
-              .filter((i) => !!i.text)
-              .map((message) => (
-                <Message
-                  key={`${message.text}`}
-                  message={message}
-                  onClick={handleClickSendMessage}
-                />
-              ))}
+            <div
+              className="widget-w-full widget-pt-0 widget-pl-5 widget-bg-white widget-rounded-bl-3xl widget-rounded-br-3xl widget-h-550"
+              style={{ maxHeight: '45vh' }}
+            >
+              <div
+                className="widget-flex widget-flex-col widget-w-full widget-h-full widget-pr-5 widget-overflow-y-auto widget-overflow-x-hidden"
+                ref={view}
+                onScroll={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {messageHistory
+                  .filter((i) => !!i.text)
+                  .map((message) => (
+                    <Message
+                      key={`${message.text}`}
+                      message={message}
+                      onClick={handleClickSendMessage}
+                    />
+                  ))}
 
-            <div ref={bottom}></div>
-          </div>
-        </div>
+                <div ref={bottom}></div>
+              </div>
+            </div>
 
-        <SendRow
-          disabled={readyState !== ReadyState.OPEN}
-          onSubmit={handleClickSendMessage}
-          lastMessage={last(messageHistory.filter((i) => !!i.text))?.text || ''}
-        />
-      </div>
+            <SendRow
+              disabled={readyState !== ReadyState.OPEN}
+              onSubmit={handleClickSendMessage}
+              lastMessage={
+                last(messageHistory.filter((i) => !!i.text))?.text || ''
+              }
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

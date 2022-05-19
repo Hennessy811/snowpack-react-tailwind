@@ -1,10 +1,17 @@
 import ChatIcon from '@shared/icons/ChatIcon';
 import CloseIcon from '@shared/icons/CloseIcon';
+import { motion } from 'framer-motion';
 import React from 'react';
 
 const OpenedHead = ({ onClose }: { onClose: () => void }) => {
   return (
-    <div className="widget-flex widget-items-center widget-justify-between widget-w-full widget-p-3 widget-rounded-tl-3xl widget-rounded-tr-3xl widget-bg-mainGreen">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="widget-flex widget-items-center widget-justify-between widget-w-full widget-p-3 widget-rounded-tl-3xl widget-rounded-tr-3xl widget-bg-mainGreen"
+    >
       <div className="widget-p-3 widget-text-white widget-rounded-full widget-bg-mainYellow">
         <ChatIcon className="widget-w-6 widget-h-6" />
       </div>
@@ -17,7 +24,7 @@ const OpenedHead = ({ onClose }: { onClose: () => void }) => {
       >
         <CloseIcon className="widget-w-4 widget-h-4 " />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

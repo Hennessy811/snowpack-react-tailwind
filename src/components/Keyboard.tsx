@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React from 'react';
 
 export type Btn =
@@ -21,7 +22,11 @@ const Keyboard = ({
   };
 
   return (
-    <div className="widget-self-end" style={{ maxWidth: '70%' }}>
+    <motion.div
+      layout
+      className="widget-self-end widget-text-lg widget-flex widget-justify-end widget-flex-wrap widget-space-x-2"
+      style={{ maxWidth: '90%' }}
+    >
       {buttons.map((row) => (
         <div key={Math.random()}>
           {row.map((btn) => (
@@ -35,7 +40,7 @@ const Keyboard = ({
           ))}
         </div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
