@@ -42,7 +42,15 @@ const Message = ({
               : 'widget-shadow-md widget-border-gray-100 widget-border widget-rounded-bl-3xl widget-rounded-br-sm',
           )}
         >
-          <Linkify>{text}</Linkify>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="blank" href={decoratedHref} key={key}>
+                {decoratedText}
+              </a>
+            )}
+          >
+            {text}
+          </Linkify>
         </div>
       </div>
 

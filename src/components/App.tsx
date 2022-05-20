@@ -143,9 +143,9 @@ function App() {
       // @ts-ignore
       if (msg?.data) {
         // @ts-ignore
-        localStorage.setItem('redirectUrl', msg.data)
+        localStorage.setItem('redirectUrl', msg.data);
       } else {
-        localStorage.setItem('redirectUrl', FAQ_URL)
+        localStorage.setItem('redirectUrl', FAQ_URL);
       }
       sendJsonMessage({
         type: 'text',

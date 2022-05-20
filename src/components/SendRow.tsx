@@ -16,13 +16,16 @@ const SendRow = ({
 
   const type = useMemo(() => {
     switch (lastMessage) {
-      case 'Задайте Ваш вопрос:':
+      case 'Введите Ваш вопрос:':
         return 'textarea';
-      case 'Введите адрес Вашей электронной почты:':
+      case 'Введите Ваш email:':
         return 'email';
       case 'Введите Ваш номер телефона:':
-        return 'phone';
+        return 'tel';
+      case 'Как вас зовут?':
+        return 'text';
       default:
+        disabled = true;
         return 'text';
     }
   }, [lastMessage]);
@@ -64,10 +67,11 @@ const SendRow = ({
           placeholder={
             type === 'email'
               ? 'sample@mail.com'
-              : type === 'phone'
+              : type === 'tel'
               ? '+79997776655'
               : 'Введите сообщение'
           }
+          pattern="+[0-9]{11}"
           name={type}
           value={value}
           onChange={(e) => setValue(e.target.value)}
