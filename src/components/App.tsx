@@ -166,11 +166,11 @@ function App() {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (messageHistory.length > 4) scrollToBottom();
   }, [messageHistory]);
 
   useEffect(() => {
-    if (open && messageHistory?.length) {
+    if (open && messageHistory?.length > 4) {
       bottom.current?.scrollIntoView({ behavior: 'auto' });
     }
   }, [open]);
