@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import { differenceWith, isEqual, last } from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { last } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 import ClosedHead from './ClosedHead';
@@ -114,17 +114,7 @@ function App() {
     clearMessageHistory();
   };
 
-  // const setMessageHistory = (messages: MessageItem[]): void => {
-  //   // const items = messages.filter((i) => !!i.text || !!i.keyboard || !!i.inline_keyboard);
-  //   _setMessageHistory((prev) => {
-  //     const v = prev.concat(messages);
-  //     localStorage.setItem('messages', JSON.stringify(v));
-  //     return v;
-  //   });
-  // };
-
   const clearMessageHistory = (): void => {
-    // const items = messages.filter((i) => !!i.text || !!i.keyboard || !!i.inline_keyboard);
     localStorage.removeItem('messages');
     _setMessageHistory([]);
     history = [];
@@ -184,9 +174,6 @@ function App() {
       bottom.current?.scrollIntoView({ behavior: 'auto' });
     }
   }, [open]);
-
-  // console.log('useCallback', messageHistory, history);
-  // console.log('diff - ', differenceWith(messageHistory, history, isEqual));
 
   return (
     <div

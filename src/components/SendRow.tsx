@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SendIcon from 'shared/icons/SendIcon';
 
 const SendRow = ({
   onSubmit,
-  disabled,
+  disabled: _disabled,
   lastMessage,
 }: {
   // eslint-disable-next-line no-unused-vars
@@ -13,6 +13,7 @@ const SendRow = ({
   lastMessage: string;
 }) => {
   const [value, setValue] = useState('');
+  const [disabled, setDisabled] = useState(_disabled);
 
   const type = useMemo(() => {
     switch (lastMessage) {
@@ -29,10 +30,14 @@ const SendRow = ({
       case 'Как вас зовут?':
         return 'text';
       default:
-        disabled = true;
+        setDisabled(true);
         return 'text';
     }
   }, [lastMessage]);
+
+  useEffect(() => {
+    setDisabled(_disabled);
+  }, [disabled]);
 
   return (
     <form
@@ -53,6 +58,7 @@ const SendRow = ({
           rows={3}
           name={type}
           value={value}
+          disabled={disabled}
           onChange={(e) => setValue(e.target.value)}
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
