@@ -20,7 +20,11 @@ const SendRow = ({
         return 'textarea';
       case 'Введите Ваш email:':
         return 'email';
+      case 'Некорректный email. Пожалуйста, введите Ваш email:':
+        return 'email';
       case 'Введите Ваш номер телефона:':
+        return 'tel';
+      case 'Некорректный номер телефона. Пожалуйста, введите Ваш номер телефона:':
         return 'tel';
       case 'Как вас зовут?':
         return 'text';
@@ -33,6 +37,7 @@ const SendRow = ({
   return (
     <form
       className="widget-flex widget-text-lg widget-leading-6 widget-items-end widget-px-5 widget-py-4"
+      noValidate={true}
       onSubmit={(e) => {
         e.preventDefault();
         if (!disabled) {
