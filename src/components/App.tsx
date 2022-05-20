@@ -50,6 +50,7 @@ function App() {
   const [sessionId, _setSessionId] = useState<string | null>(
     localStorage.getItem('sessionId') || '',
   );
+  const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(getLocalHistory());
 
   const lastMessage = useRef<HTMLDivElement | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
@@ -59,7 +60,64 @@ function App() {
     'wss://dwdev.way2ai.ru/income_message/' +
     (sessionId ? `?sessionId=${sessionId}` : '');
 
-  const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(getLocalHistory());
+  const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
+    // onOpen: () => {
+    //   if (sessionId) {
+    //     sendJsonMessage({
+    //       type: `init`,
+    //       payload: `${'YESFAQ'}`,
+    //       session_id: sessionId,
+    //       user_id: sessionId,
+    //     });
+    //   }
+    // },
+    onError: (e) => {
+      console.log('socket error', e);
+    },
+    onMessage: (msg) => {
+      const data = JSON.parse(msg.data);
+      const sid = data.user_id || data.session_id;
+      console.log('session id', sid);
+      console.log('new message', data);
+
+      if (sid !== sessionId) {
+        console.log('sid changed!');
+        console.log('update sid');
+        setSessionId(sid);
+        console.log('send init');
+        sendInitMessage(sid);
+        return;
+      } else {
+        console.log('sid ok');
+
+        setMessageHistory([
+          ...messageHistory,
+          { ...lastJsonMessage, createdBy: 'support' },
+        ]);
+
+        if (localStorage.redirectUrl) {
+          const toUrl = localStorage.redirectUrl;
+          localStorage.removeItem('redirectUrl');
+          window.location.href = toUrl;
+        }
+      }
+    },
+    reconnectAttempts: 30,
+    reconnectInterval: 500,
+    shouldReconnect: () => {
+      console.log('closed, reconnecting');
+      return true;
+    },
+  });
+
+  const sendInitMessage = (id: string) => {
+    sendJsonMessage({
+      type: `init`,
+      payload: `${'YESFAQ'}`,
+      session_id: id,
+      user_id: id,
+    });
+  };
 
   const setSessionId = (id: string) => {
     localStorage.setItem('sessionId', id);
@@ -69,67 +127,55 @@ function App() {
   };
 
   const setMessageHistory = (messages: MessageItem[]): void => {
-    localStorage.setItem('messages', JSON.stringify(messages));
-    _setMessageHistory(messages);
+    const items = messages.filter((i) => !!i.text || !!i.keyboard || !!i.inline_keyboard);
+    localStorage.setItem('messages', JSON.stringify(items));
+    _setMessageHistory(items);
   };
 
-  const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
-    onOpen: () => {
-      if (sessionId) {
-        sendJsonMessage({
-          type: `init`,
-          payload: `${'YESFAQ'}`,
-          session_id: sessionId,
-          user_id: sessionId,
-        });
-      }
-    },
-    reconnectAttempts: 30,
-    reconnectInterval: 500,
-    shouldReconnect: () => {
-      console.log('closed, reconnecting');
+  // useEffect(() => {
+  //   if (lastJsonMessage) {
+  //     const _sessionId = lastJsonMessage.user_id;
 
-      return true;
-    },
-  });
+  //     console.log('session ids unchanged', sessionId === _sessionId);
 
-  useEffect(() => {
-    if (lastJsonMessage) {
-      console.log(lastJsonMessage, openedConnection);
-      const _sessionId = lastJsonMessage.user_id;
+  //     if (!openedConnection && _sessionId) {
+  //       if (_sessionId !== sessionId) {
+  //         setSessionId(_sessionId);
+  //       }
 
-      console.log({
-        _sessionId,
-        sessionId,
-      });
+  //       // sendJsonMessage({
+  //       //   type: `init`,
+  //       //   payload: `${'YESFAQ'}`,
+  //       //   session_id: _sessionId,
+  //       //   user_id: _sessionId,
+  //       // });
 
-      if (!openedConnection && _sessionId) {
-        if (_sessionId !== sessionId) {
-          setSessionId(_sessionId);
-        }
+  //       setOpenedConnection(true);
+  //     }
 
-        // sendJsonMessage({
-        //   type: `init`,
-        //   payload: `${'YESFAQ'}`,
-        //   session_id: _sessionId,
-        //   user_id: _sessionId,
-        // });
+  //     setMessageHistory([
+  //       ...messageHistory,
+  //       { ...lastJsonMessage, createdBy: 'support' },
+  //     ]);
 
-        setOpenedConnection(true);
-      }
+  //     if (sessionId !== _sessionId) {
+  //       setSessionId(_sessionId);
 
-      setMessageHistory([
-        ...messageHistory,
-        { ...lastJsonMessage, createdBy: 'support' },
-      ]);
+  //       sendJsonMessage({
+  //         type: `init`,
+  //         payload: `${'YESFAQ'}`,
+  //         session_id: _sessionId,
+  //         user_id: _sessionId,
+  //       });
+  //     }
 
-      if (localStorage.redirectUrl) {
-        const toUrl = localStorage.redirectUrl;
-        localStorage.removeItem('redirectUrl');
-        window.location.href = toUrl;
-      }
-    }
-  }, [lastJsonMessage]);
+  //     if (localStorage.redirectUrl) {
+  //       const toUrl = localStorage.redirectUrl;
+  //       localStorage.removeItem('redirectUrl');
+  //       window.location.href = toUrl;
+  //     }
+  //   }
+  // }, [lastJsonMessage]);
 
   const scrollToBottom = () => {
     lastMessage.current?.scrollIntoView({ behavior: 'smooth' });
@@ -175,6 +221,8 @@ function App() {
     }
   }, [open]);
 
+  console.log(messageHistory);
+
   return (
     <div
       className="widget-fixed widget-right-2 widget-ml-2"
@@ -210,7 +258,7 @@ function App() {
                 {messageHistory
                   .filter((i) => !!i.text)
                   .map((message) => (
-                    <div key={`${message.text}`} ref={lastMessage}>
+                    <div key={message.text} ref={lastMessage}>
                       <Message message={message} onClick={handleClickSendMessage} />
                     </div>
                   ))}
