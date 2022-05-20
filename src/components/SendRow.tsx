@@ -18,16 +18,22 @@ const SendRow = ({
   const type = useMemo(() => {
     switch (lastMessage) {
       case 'Введите Ваш вопрос:':
+        setDisabled(false);
         return 'textarea';
       case 'Введите Ваш email:':
+        setDisabled(false);
         return 'email';
       case 'Некорректный email. Пожалуйста, введите Ваш email:':
+        setDisabled(false);
         return 'email';
       case 'Введите Ваш номер телефона:':
+        setDisabled(false);
         return 'tel';
       case 'Некорректный номер телефона. Пожалуйста, введите Ваш номер телефона:':
+        setDisabled(false);
         return 'tel';
       case 'Как вас зовут?':
+        setDisabled(false);
         return 'text';
       default:
         setDisabled(true);
