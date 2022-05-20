@@ -181,22 +181,7 @@ function App() {
       style={{ zIndex: 9999999, bottom: 'calc(10vh + 8px)' }}
     >
       <AnimatePresence>
-        {!open ? (
-          <ClosedHead
-            onOpen={() => {
-              setOpen(true);
-            }}
-          />
-        ) : (
-          <OpenedHead
-            onClose={() => {
-              setOpen(false);
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
+        <ClosedHead open={open} onOpen={() => setOpen(!open)} />
         {open && (
           <motion.div
             initial={{ opacity: 0, y: 100 }}

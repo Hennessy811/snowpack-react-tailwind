@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/jsx-no-comment-textnodes */
 import { motion } from 'framer-motion';
 import React from 'react';
 import ChatIcon from 'shared/icons/ChatIcon';
@@ -11,7 +8,6 @@ const OpenedHead = ({ onClose }: { onClose: () => void }) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       className="widget-flex widget-items-center widget-justify-between widget-w-full widget-p-3 widget-rounded-tl-3xl widget-rounded-tr-3xl widget-bg-mainGreen"
     >
