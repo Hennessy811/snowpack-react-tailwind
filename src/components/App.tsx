@@ -73,12 +73,14 @@ function App() {
 
   const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
     onOpen: () => {
-      // sendJsonMessage({
-      //   type: `init`,
-      //   payload: `${'YESFAQ'}`,
-      //   session_id: sessionId,
-      //   user_id: sessionId,
-      // });
+      if (sessionId) {
+        sendJsonMessage({
+          type: `init`,
+          payload: `${'YESFAQ'}`,
+          session_id: sessionId,
+          user_id: sessionId,
+        });
+      }
     },
     reconnectAttempts: 30,
     reconnectInterval: 500,
@@ -105,12 +107,12 @@ function App() {
           setMessageHistory([]);
         }
 
-        sendJsonMessage({
-          type: `init`,
-          payload: `${'YESFAQ'}`,
-          session_id: _sessionId,
-          user_id: _sessionId,
-        });
+        // sendJsonMessage({
+        //   type: `init`,
+        //   payload: `${'YESFAQ'}`,
+        //   session_id: _sessionId,
+        //   user_id: _sessionId,
+        // });
 
         setOpenedConnection(true);
       }
@@ -119,6 +121,12 @@ function App() {
         ...messageHistory,
         { ...lastJsonMessage, createdBy: 'support' },
       ]);
+
+      if (localStorage.redirectUrl) {
+        const toUrl = localStorage.redirectUrl;
+        localStorage.removeItem('redirectUrl');
+        window.location.href = toUrl;
+      }
     }
   }, [lastJsonMessage]);
 
@@ -127,26 +135,32 @@ function App() {
   };
 
   const handleClickSendMessage = (msg: Btn) => {
-    if (msg === 'Перейти') {
-      window.location.href = FAQ_URL;
-    }
-
     // @ts-ignore
     setMessageHistory([...messageHistory, getDefaultMessage(msg.text || msg)]);
-    sendJsonMessage({
-      type: 'text',
-      // @ts-ignore
-      payload: msg.data || msg,
-      session_id: sessionId,
-    });
 
-    setTimeout(() => {
+    // @ts-ignore
+    if (msg?.text === 'Перейти') {
       // @ts-ignore
       if (msg?.data) {
         // @ts-ignore
-        window.location.href = msg.data;
+        localStorage.setItem('redirectUrl', msg.data)
+      } else {
+        localStorage.setItem('redirectUrl', FAQ_URL)
       }
-    }, 200);
+      sendJsonMessage({
+        type: 'text',
+        // @ts-ignore
+        payload: msg.text,
+        session_id: sessionId,
+      });
+    } else {
+      sendJsonMessage({
+        type: 'text',
+        // @ts-ignore
+        payload: msg.data || msg,
+        session_id: sessionId,
+      });
+    }
   };
 
   useEffect(() => {
