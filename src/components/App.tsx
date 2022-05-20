@@ -50,20 +50,22 @@ function App() {
   const [sessionId, _setSessionId] = useState<string | null>(
     localStorage.getItem('sessionId') || '',
   );
+
+  const lastMessage = useRef<HTMLDivElement | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const view = useRef<HTMLDivElement>(null);
-  // const bottom = useRef<HTMLDivElement>(null);
+
   const socketUrl =
     'wss://dwdev.way2ai.ru/income_message/' +
     (sessionId ? `?sessionId=${sessionId}` : '');
 
   const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(getLocalHistory());
 
-  console.log(socketUrl);
-
   const setSessionId = (id: string) => {
     localStorage.setItem('sessionId', id);
     _setSessionId(id);
+
+    setMessageHistory([]);
   };
 
   const setMessageHistory = (messages: MessageItem[]): void => {
@@ -104,7 +106,6 @@ function App() {
       if (!openedConnection && _sessionId) {
         if (_sessionId !== sessionId) {
           setSessionId(_sessionId);
-          setMessageHistory([]);
         }
 
         // sendJsonMessage({
@@ -131,7 +132,8 @@ function App() {
   }, [lastJsonMessage]);
 
   const scrollToBottom = () => {
-    view.current?.scrollBy({ top: 100, behavior: 'smooth' });
+    lastMessage.current?.scrollIntoView({ behavior: 'smooth' });
+    // view.current?.scrollBy({ top: view.current?.clientHeight / 2, behavior: 'smooth' });
   };
 
   const handleClickSendMessage = (msg: Btn) => {
@@ -168,8 +170,8 @@ function App() {
   }, [messageHistory]);
 
   useEffect(() => {
-    if (open) {
-      bottom.current?.scrollIntoView({ behavior: 'smooth' });
+    if (open && messageHistory?.length) {
+      bottom.current?.scrollIntoView({ behavior: 'auto' });
     }
   }, [open]);
 
@@ -203,7 +205,6 @@ function App() {
             transition={{ duration: 0.2 }}
             className={clsx(
               'widget-shadow-lg widget-rounded-3xl widget-bg-white widget-w-full',
-              // !open && 'widget-hidden',
             )}
             style={{
               maxWidth: 380,
@@ -224,11 +225,9 @@ function App() {
                 {messageHistory
                   .filter((i) => !!i.text)
                   .map((message) => (
-                    <Message
-                      key={`${message.text}`}
-                      message={message}
-                      onClick={handleClickSendMessage}
-                    />
+                    <div key={`${message.text}`} ref={lastMessage}>
+                      <Message message={message} onClick={handleClickSendMessage} />
+                    </div>
                   ))}
 
                 <div ref={bottom}></div>
