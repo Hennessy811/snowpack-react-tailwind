@@ -45,6 +45,7 @@ const FAQ_URL = window.location.href.includes('detrimax.itsft')
   : 'https://detrimax.ru/vopros-otvet';
 
 function App() {
+  const [openedConnection, setOpenedConnection] = useState(false);
   const [open, setOpen] = useState(false);
   const [sessionId, _setSessionId] = useState<string | null>(
     localStorage.getItem('sessionId') || '',
@@ -52,10 +53,10 @@ function App() {
   const bottom = useRef<HTMLDivElement>(null);
   const view = useRef<HTMLDivElement>(null);
   // const bottom = useRef<HTMLDivElement>(null);
-  const [socketUrl] = useState(
+  const socketUrl =
     'wss://dwbakend.way2ai.ru/income_message/' +
-      (sessionId ? `?sessionId=${sessionId}` : ''),
-  );
+    (sessionId ? `?sessionId=${sessionId}` : '');
+
   const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(getLocalHistory());
 
   console.log(socketUrl);
@@ -72,12 +73,12 @@ function App() {
 
   const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
     onOpen: () => {
-      sendJsonMessage({
-        type: `init`,
-        payload: `${'YESFAQ'}`,
-        session_id: sessionId,
-        user_id: sessionId,
-      });
+      // sendJsonMessage({
+      //   type: `init`,
+      //   payload: `${'YESFAQ'}`,
+      //   session_id: sessionId,
+      //   user_id: sessionId,
+      // });
     },
     reconnectAttempts: 30,
     reconnectInterval: 500,
@@ -89,24 +90,41 @@ function App() {
   });
 
   useEffect(() => {
-    if (!sessionId && lastJsonMessage?.user_id) {
-      setSessionId(lastJsonMessage?.user_id);
+    if (lastJsonMessage) {
+      console.log(lastJsonMessage, openedConnection);
+      const _sessionId = lastJsonMessage.user_id;
+
+      console.log({
+        _sessionId,
+        sessionId,
+      });
+
+      if (!openedConnection && _sessionId) {
+        if (_sessionId !== sessionId) {
+          setSessionId(_sessionId);
+          setMessageHistory([]);
+        }
+
+        sendJsonMessage({
+          type: `init`,
+          payload: `${'YESFAQ'}`,
+          session_id: _sessionId,
+          user_id: _sessionId,
+        });
+
+        setOpenedConnection(true);
+      }
+
+      setMessageHistory([
+        ...messageHistory,
+        { ...lastJsonMessage, createdBy: 'support' },
+      ]);
     }
   }, [lastJsonMessage]);
 
   const scrollToBottom = () => {
     view.current?.scrollBy({ top: 100, behavior: 'smooth' });
-    // bottom.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    setMessageHistory([...messageHistory, { ...lastJsonMessage, createdBy: 'support' }]);
-
-    if (lastJsonMessage?.user_id !== sessionId) {
-      setMessageHistory([]);
-      setSessionId(lastJsonMessage?.user_id);
-    }
-  }, [lastJsonMessage]);
 
   const handleClickSendMessage = (msg: Btn) => {
     if (msg === 'Перейти') {
