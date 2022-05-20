@@ -1,13 +1,12 @@
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import { last } from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import { differenceWith, isEqual, last } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 import ClosedHead from './ClosedHead';
 import type { Btn } from './Keyboard';
 import Message from './Message';
-import OpenedHead from './OpenedHead';
 import SendRow from './SendRow';
 
 export interface MessageItem {
@@ -44,13 +43,15 @@ const FAQ_URL = window.location.href.includes('detrimax.itsft')
   ? 'https://detrimax.itsft.ru/vopros-otvet'
   : 'https://detrimax.ru/vopros-otvet';
 
+let history = getLocalHistory();
+
 function App() {
-  const [openedConnection, setOpenedConnection] = useState(false);
+  // const [openedConnection, setOpenedConnection] = useState(false);
   const [open, setOpen] = useState(false);
   const [sessionId, _setSessionId] = useState<string | null>(
     localStorage.getItem('sessionId') || '',
   );
-  const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(getLocalHistory());
+  const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(history);
 
   const lastMessage = useRef<HTMLDivElement | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
@@ -60,40 +61,27 @@ function App() {
     'wss://dwdev.way2ai.ru/income_message/' +
     (sessionId ? `?sessionId=${sessionId}` : '');
 
-  const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
-    // onOpen: () => {
-    //   if (sessionId) {
-    //     sendJsonMessage({
-    //       type: `init`,
-    //       payload: `${'YESFAQ'}`,
-    //       session_id: sessionId,
-    //       user_id: sessionId,
-    //     });
-    //   }
-    // },
+  const { sendJsonMessage, readyState } = useWebSocket(socketUrl, {
     onError: (e) => {
-      console.log('socket error', e);
+      console.debug('socket error', e);
     },
     onMessage: (msg) => {
       const data = JSON.parse(msg.data);
       const sid = data.user_id || data.session_id;
-      console.log('session id', sid);
-      console.log('new message', data);
+      console.debug('session id', sid);
+      console.debug('new message', data.text);
+      history.push(data);
 
       if (sid !== sessionId) {
-        console.log('sid changed!');
-        console.log('update sid');
+        console.debug('sid changed!');
+        console.debug('update sid');
         setSessionId(sid);
-        console.log('send init');
+        console.debug('send init');
         sendInitMessage(sid);
         return;
       } else {
-        console.log('sid ok');
-
-        setMessageHistory([
-          ...messageHistory,
-          { ...lastJsonMessage, createdBy: 'support' },
-        ]);
+        console.debug('sid ok');
+        pushMessage({ ...data, createdBy: 'support' });
 
         if (localStorage.redirectUrl) {
           const toUrl = localStorage.redirectUrl;
@@ -105,7 +93,7 @@ function App() {
     reconnectAttempts: 30,
     reconnectInterval: 500,
     shouldReconnect: () => {
-      console.log('closed, reconnecting');
+      console.debug('closed, reconnecting');
       return true;
     },
   });
@@ -123,59 +111,34 @@ function App() {
     localStorage.setItem('sessionId', id);
     _setSessionId(id);
 
-    setMessageHistory([]);
+    clearMessageHistory();
   };
 
-  const setMessageHistory = (messages: MessageItem[]): void => {
-    const items = messages.filter((i) => !!i.text || !!i.keyboard || !!i.inline_keyboard);
-    localStorage.setItem('messages', JSON.stringify(items));
-    _setMessageHistory(items);
+  // const setMessageHistory = (messages: MessageItem[]): void => {
+  //   // const items = messages.filter((i) => !!i.text || !!i.keyboard || !!i.inline_keyboard);
+  //   _setMessageHistory((prev) => {
+  //     const v = prev.concat(messages);
+  //     localStorage.setItem('messages', JSON.stringify(v));
+  //     return v;
+  //   });
+  // };
+
+  const clearMessageHistory = (): void => {
+    // const items = messages.filter((i) => !!i.text || !!i.keyboard || !!i.inline_keyboard);
+    localStorage.removeItem('messages');
+    _setMessageHistory([]);
+    history = [];
   };
 
-  // useEffect(() => {
-  //   if (lastJsonMessage) {
-  //     const _sessionId = lastJsonMessage.user_id;
-
-  //     console.log('session ids unchanged', sessionId === _sessionId);
-
-  //     if (!openedConnection && _sessionId) {
-  //       if (_sessionId !== sessionId) {
-  //         setSessionId(_sessionId);
-  //       }
-
-  //       // sendJsonMessage({
-  //       //   type: `init`,
-  //       //   payload: `${'YESFAQ'}`,
-  //       //   session_id: _sessionId,
-  //       //   user_id: _sessionId,
-  //       // });
-
-  //       setOpenedConnection(true);
-  //     }
-
-  //     setMessageHistory([
-  //       ...messageHistory,
-  //       { ...lastJsonMessage, createdBy: 'support' },
-  //     ]);
-
-  //     if (sessionId !== _sessionId) {
-  //       setSessionId(_sessionId);
-
-  //       sendJsonMessage({
-  //         type: `init`,
-  //         payload: `${'YESFAQ'}`,
-  //         session_id: _sessionId,
-  //         user_id: _sessionId,
-  //       });
-  //     }
-
-  //     if (localStorage.redirectUrl) {
-  //       const toUrl = localStorage.redirectUrl;
-  //       localStorage.removeItem('redirectUrl');
-  //       window.location.href = toUrl;
-  //     }
-  //   }
-  // }, [lastJsonMessage]);
+  const pushMessage = (message: MessageItem): void => {
+    history.push(message);
+    console.warn('PushMessage', message.text);
+    _setMessageHistory((prev) => {
+      const v = prev.concat([message]);
+      localStorage.setItem('messages', JSON.stringify(v));
+      return v;
+    });
+  };
 
   const scrollToBottom = () => {
     lastMessage.current?.scrollIntoView({ behavior: 'smooth' });
@@ -184,7 +147,8 @@ function App() {
 
   const handleClickSendMessage = (msg: Btn) => {
     // @ts-ignore
-    setMessageHistory([...messageHistory, getDefaultMessage(msg.text || msg)]);
+    // setMessageHistory([...messageHistory, getDefaultMessage(msg.text || msg)]);
+    pushMessage(getDefaultMessage(msg.text || msg));
 
     // @ts-ignore
     if (msg?.text === 'Перейти') {
@@ -221,7 +185,8 @@ function App() {
     }
   }, [open]);
 
-  console.log(messageHistory);
+  // console.log('useCallback', messageHistory, history);
+  // console.log('diff - ', differenceWith(messageHistory, history, isEqual));
 
   return (
     <div
