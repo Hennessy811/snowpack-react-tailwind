@@ -35,9 +35,11 @@ const SendRow = ({
     }
   }, [lastMessage]);
 
-  useEffect(() => {
-    setDisabled(_disabled);
-  }, [disabled]);
+  // useEffect(() => {
+  //   setDisabled(_disabled);
+  // }, [disabled]);
+
+  console.log({ _disabled, disabled });
 
   return (
     <form
