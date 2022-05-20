@@ -54,7 +54,7 @@ function App() {
   const view = useRef<HTMLDivElement>(null);
   // const bottom = useRef<HTMLDivElement>(null);
   const socketUrl =
-    'wss://dwbakend.way2ai.ru/income_message/' +
+    'wss://dwdev.way2ai.ru/income_message/' +
     (sessionId ? `?sessionId=${sessionId}` : '');
 
   const [messageHistory, _setMessageHistory] = useState<MessageItem[]>(getLocalHistory());
