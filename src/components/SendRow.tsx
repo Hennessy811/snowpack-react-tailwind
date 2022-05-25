@@ -30,9 +30,12 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
       case 'Некорректный номер телефона. Пожалуйста, введите Ваш номер телефона:':
         setDisabled(false);
         return 'tel';
-      case 'Как вас зовут?':
+      case 'Как Вас зовут?':
         setDisabled(false);
         return 'text';
+      case 'Пожалуйста, введите Ваше имя кириллицей:':
+          setDisabled(false);
+          return 'text';
       default:
         setDisabled(true);
         return 'text';
