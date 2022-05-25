@@ -84,8 +84,9 @@ function App() {
         pushMessage({ ...data, createdBy: 'support' });
 
         if (localStorage.redirectUrl) {
-          const toUrl = localStorage.redirectUrl;
-          window.location.href = toUrl;
+          const toUrl = new URL(localStorage.redirectUrl);
+          window.location.href = toUrl.toString();
+          if (window.location.origin === toUrl.origin) window.location.reload();
         }
       }
     },
