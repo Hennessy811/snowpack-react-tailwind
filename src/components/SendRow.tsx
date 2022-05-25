@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import SendIcon from 'shared/icons/SendIcon';
 
 interface Props {
@@ -12,13 +12,14 @@ interface Props {
 const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
   const [value, setValue] = useState('');
   const [disabled, setDisabled] = useState(_disabled);
+  const inputRef = useRef(null);
 
   const type = useMemo(() => {
     switch (lastMessage) {
       case 'Введите Ваш вопрос:':
         setDisabled(false);
         return 'textarea';
-      case 'Введите Ваш email:':
+      case 'Ответ будет направлен на email, укажите, пожалуйста, Ваш адрес:':
         setDisabled(false);
         return 'email';
       case 'Некорректный email. Пожалуйста, введите Ваш email:':
@@ -30,7 +31,7 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
       case 'Некорректный номер телефона. Пожалуйста, введите Ваш номер телефона:':
         setDisabled(false);
         return 'tel';
-      case 'Как вас зовут?':
+      case 'Как Вас зовут?':
         setDisabled(false);
         return 'text';
       default:
@@ -48,6 +49,12 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
 
   const placeholder = disabled ? '' : defaultInputPlaceholder;
 
+  useEffect(() => {
+    // if (type)
+    //@ts-ignore
+    inputRef?.current?.focus();
+  }, [disabled]);
+
   return (
     <form
       className="widget-flex widget-text-lg widget-leading-6 widget-items-end widget-px-5 widget-py-4"
@@ -62,6 +69,7 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
     >
       {type === 'textarea' ? (
         <textarea
+          ref={inputRef}
           autoFocus
           className={clsx(
             'widget-w-full widget-px-5 widget-py-3 transition widget-bg-gray-100 widget-appearance-none widget-rounded-xl disabled:widget-bg-gray-200',
@@ -84,6 +92,7 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
         />
       ) : (
         <input
+          ref={inputRef}
           autoFocus
           disabled={disabled}
           type={type}
