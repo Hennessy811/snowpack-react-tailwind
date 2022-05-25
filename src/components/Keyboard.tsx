@@ -1,21 +1,22 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
+import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React from 'react';
 
-export type Btn =
-  | string
-  | {
-      data: string;
-      text: string;
-    };
+export interface BtnWithData {
+  data: string;
+  text: string;
+}
+export type Btn = BtnWithData | string;
 
 const Keyboard = ({
   buttons,
   onClick,
+  disabled,
 }: {
   buttons: Btn[][] | null;
   // eslint-disable-next-line no-unused-vars
   onClick: (message: Btn) => void;
+  disabled?: boolean;
 }) => {
   if (buttons === null) return null;
 
@@ -36,8 +37,13 @@ const Keyboard = ({
               role="button"
               tabIndex={0}
               key={btnText(btn)}
-              className="widget-px-4 widget-py-3 widget-bg-mainGreen-buttons widget-bg-opacity-20 widget-my-2 widget-transition-all widget-cursor-pointer hover:widget-text-white hover:widget-bg-mainGreen widget-text-mainGreen widget-rounded-2xl"
-              onClick={() => onClick(btn)}
+              className={clsx(
+                'widget-px-4 widget-py-3 widget-bg-mainGreen-buttons widget-bg-opacity-20 widget-my-2 widget-transition-all widget-text-mainGreen widget-rounded-2xl',
+                disabled && 'widget-opacity-50 widget-cursor-not-allowed',
+                !disabled &&
+                  'widget-cursor-pointer hover:widget-text-white hover:widget-bg-mainGreen',
+              )}
+              onClick={() => !disabled && onClick(btn)}
             >
               {btnText(btn)}
             </div>

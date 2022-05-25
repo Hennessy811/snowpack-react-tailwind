@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 import ClosedHead from './ClosedHead';
-import type { Btn } from './Keyboard';
+import type { Btn, BtnWithData } from './Keyboard';
 import Message from './Message';
 import SendRow from './SendRow';
 
@@ -68,24 +68,23 @@ function App() {
     onMessage: (msg) => {
       const data = JSON.parse(msg.data);
       const sid = data.user_id || data.session_id;
-      console.debug('session id', sid);
-      console.debug('new message', data.text);
+      // console.debug('session id', sid);
+      // console.debug('new message', data.text);
       history.push(data);
 
       if (sid !== sessionId) {
-        console.debug('sid changed!');
-        console.debug('update sid');
+        // console.debug('sid changed!');
+        // console.debug('update sid');
         setSessionId(sid);
-        console.debug('send init');
+        // console.debug('send init');
         sendInitMessage(sid);
         return;
       } else {
-        console.debug('sid ok');
+        // console.debug('sid ok');
         pushMessage({ ...data, createdBy: 'support' });
 
         if (localStorage.redirectUrl) {
           const toUrl = localStorage.redirectUrl;
-          localStorage.removeItem('redirectUrl');
           window.location.href = toUrl;
         }
       }
@@ -122,7 +121,6 @@ function App() {
 
   const pushMessage = (message: MessageItem): void => {
     history.push(message);
-    console.warn('PushMessage', message.text);
     _setMessageHistory((prev) => {
       const v = prev.concat([message]);
       localStorage.setItem('messages', JSON.stringify(v));
@@ -136,30 +134,28 @@ function App() {
   };
 
   const handleClickSendMessage = (msg: Btn) => {
-    // @ts-ignore
-    // setMessageHistory([...messageHistory, getDefaultMessage(msg.text || msg)]);
-    pushMessage(getDefaultMessage(msg.text || msg));
+    const text = (msg as BtnWithData).text || (msg as string);
+    const data = (msg as BtnWithData).data;
 
-    // @ts-ignore
-    if (msg?.text === 'Перейти') {
-      // @ts-ignore
-      if (msg?.data) {
-        // @ts-ignore
-        localStorage.setItem('redirectUrl', msg.data);
+    console.log('send message', text, data);
+
+    pushMessage(getDefaultMessage(text));
+
+    if (text === 'Перейти') {
+      if (data) {
+        localStorage.setItem('redirectUrl', data);
       } else {
         localStorage.setItem('redirectUrl', FAQ_URL);
       }
       sendJsonMessage({
         type: 'text',
-        // @ts-ignore
-        payload: msg.text,
+        payload: text,
         session_id: sessionId,
       });
     } else {
       sendJsonMessage({
         type: 'text',
-        // @ts-ignore
-        payload: msg.data || msg,
+        payload: data || msg,
         session_id: sessionId,
       });
     }
@@ -174,6 +170,13 @@ function App() {
       bottom.current?.scrollIntoView({ behavior: 'auto' });
     }
   }, [open]);
+
+  useEffect(() => {
+    if (localStorage.getItem('redirectUrl')) {
+      localStorage.removeItem('redirectUrl');
+      setOpen(true);
+    }
+  }, []);
 
   return (
     <div
@@ -209,9 +212,13 @@ function App() {
               >
                 {messageHistory
                   .filter((i) => !!i.text)
-                  .map((message) => (
+                  .map((message, i, arr) => (
                     <div key={message.text} ref={lastMessage}>
-                      <Message message={message} onClick={handleClickSendMessage} />
+                      <Message
+                        message={message}
+                        onClick={handleClickSendMessage}
+                        disabled={i < arr.length - 1}
+                      />
                     </div>
                   ))}
 

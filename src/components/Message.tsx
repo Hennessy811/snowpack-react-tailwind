@@ -9,10 +9,12 @@ import Keyboard, { Btn } from './Keyboard';
 const Message = ({
   message,
   onClick,
+  disabled,
 }: {
   message: MessageItem;
   // eslint-disable-next-line no-unused-vars
   onClick: (msg: Btn) => void;
+  disabled: boolean;
 }) => {
   const { text, createdBy } = message;
   const author = createdBy === 'support' ? 'support' : 'user';
@@ -30,7 +32,7 @@ const Message = ({
     >
       <div
         className={clsx(
-          'widget-flex widget-my-2', // widget-max-w-md
+          'widget-flex widget-my-2',
           author === 'user' && 'widget-justify-end',
         )}
       >
@@ -54,8 +56,8 @@ const Message = ({
         </div>
       </div>
 
-      <Keyboard buttons={message.keyboard} onClick={onClick} />
-      <Keyboard buttons={message.inline_keyboard} onClick={onClick} />
+      <Keyboard disabled={disabled} buttons={message.keyboard} onClick={onClick} />
+      <Keyboard disabled={disabled} buttons={message.inline_keyboard} onClick={onClick} />
     </motion.div>
   );
 };

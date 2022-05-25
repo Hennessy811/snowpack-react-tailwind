@@ -1,17 +1,15 @@
 import clsx from 'clsx';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import SendIcon from 'shared/icons/SendIcon';
 
-const SendRow = ({
-  onSubmit,
-  disabled: _disabled,
-  lastMessage,
-}: {
+interface Props {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (message: string) => void;
   disabled: boolean;
   lastMessage: string;
-}) => {
+}
+
+const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
   const [value, setValue] = useState('');
   const [disabled, setDisabled] = useState(_disabled);
 
@@ -41,11 +39,14 @@ const SendRow = ({
     }
   }, [lastMessage]);
 
-  // useEffect(() => {
-  //   setDisabled(_disabled);
-  // }, [disabled]);
+  const defaultInputPlaceholder =
+    type === 'email'
+      ? 'sample@mail.com'
+      : type === 'tel'
+      ? '+79997776655'
+      : 'Введите сообщение';
 
-  console.log({ _disabled, disabled });
+  const placeholder = disabled ? '' : defaultInputPlaceholder;
 
   return (
     <form
@@ -61,7 +62,10 @@ const SendRow = ({
     >
       {type === 'textarea' ? (
         <textarea
-          className="widget-w-full widget-px-5 widget-py-3 widget-bg-gray-100 widget-appearance-none widget-rounded-xl"
+          autoFocus
+          className={clsx(
+            'widget-w-full widget-px-5 widget-py-3 transition widget-bg-gray-100 widget-appearance-none widget-rounded-xl disabled:widget-bg-gray-200',
+          )}
           placeholder="Например, Детримакс актив доза"
           rows={3}
           name={type}
@@ -80,16 +84,11 @@ const SendRow = ({
         />
       ) : (
         <input
+          autoFocus
           disabled={disabled}
           type={type}
-          className="widget-w-full widget-h-12 widget-px-5 widget-py-3 widget-bg-gray-100 widget-appearance-none widget-rounded-xl"
-          placeholder={
-            type === 'email'
-              ? 'sample@mail.com'
-              : type === 'tel'
-              ? '+79997776655'
-              : 'Введите сообщение'
-          }
+          className="widget-w-full widget-h-12 widget-px-5 widget-py-3 transition widget-bg-gray-100 widget-appearance-none widget-rounded-xl disabled:widget-bg-gray-200"
+          placeholder={placeholder}
           pattern="+[0-9]{11}"
           name={type}
           value={value}
