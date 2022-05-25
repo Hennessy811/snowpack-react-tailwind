@@ -18,7 +18,7 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
       case 'Введите Ваш вопрос:':
         setDisabled(false);
         return 'textarea';
-      case 'Введите Ваш email:':
+      case 'Ответ будет направлен на email, укажите, пожалуйста, Ваш адрес:':
         setDisabled(false);
         return 'email';
       case 'Некорректный email. Пожалуйста, введите Ваш email:':
@@ -34,8 +34,8 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
         setDisabled(false);
         return 'text';
       case 'Пожалуйста, введите Ваше имя кириллицей:':
-          setDisabled(false);
-          return 'text';
+        setDisabled(false);
+        return 'text';
       default:
         setDisabled(true);
         return 'text';
