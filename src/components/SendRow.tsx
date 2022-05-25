@@ -34,6 +34,9 @@ const SendRow = ({ onSubmit, disabled: _disabled, lastMessage }: Props) => {
       case 'Как Вас зовут?':
         setDisabled(false);
         return 'text';
+      case 'Пожалуйста, введите Ваше имя кириллицей:':
+        setDisabled(false);
+        return 'text';
       default:
         setDisabled(true);
         return 'text';

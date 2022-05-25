@@ -86,7 +86,6 @@ function App() {
         if (localStorage.redirectUrl) {
           const toUrl = new URL(localStorage.redirectUrl);
           window.location.href = toUrl.toString();
-          if (window.location.origin === toUrl.origin) window.location.reload();
         }
       }
     },
