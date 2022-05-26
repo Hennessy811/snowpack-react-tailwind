@@ -196,6 +196,7 @@ function App() {
             )}
             style={{
               maxWidth: 380,
+              width: 'calc(100vw - 15px)',
             }}
           >
             <div
