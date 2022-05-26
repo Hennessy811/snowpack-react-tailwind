@@ -58,7 +58,7 @@ function App() {
   const view = useRef<HTMLDivElement>(null);
 
   const socketUrl =
-    'wss://dwdev.way2ai.ru/income_message/' +
+    'wss://dwbakend.way2ai.ru/income_message/' +
     (sessionId ? `?sessionId=${sessionId}` : '');
 
   const { sendJsonMessage, readyState } = useWebSocket(socketUrl, {
