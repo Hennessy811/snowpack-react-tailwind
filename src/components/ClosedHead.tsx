@@ -30,7 +30,7 @@ const ClosedHead = ({ onOpen, open }: { onOpen: () => void; open: boolean }) => 
               layout
               className="widget-mx-6 widget-text-xl widget-font-medium widget-text-center widget-text-white"
             >
-              D3-Бот
+              D3 помощник
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 30 }}

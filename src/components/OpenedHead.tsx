@@ -15,13 +15,13 @@ const OpenedHead = ({ onClose }: { onClose: () => void }) => {
         <ChatIcon className="widget-w-6 widget-h-6" />
       </div>
       <p className="widget-mx-6 widget-text-xl widget-font-medium widget-text-center widget-text-white">
-        D3-Бот
+        D3 помощник
       </p>
       <div
         className="widget-p-3 widget-text-white widget-cursor-pointer hover:widget-scale-105"
         onClick={() => onClose()}
       >
-        <CloseIcon className="widget-w-4 widget-h-4 " />
+        <CloseIcon className="widget-w-4 widget-h-4 " />  
       </div>
     </motion.div>
   );

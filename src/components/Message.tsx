@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React from 'react';
 import Linkify from 'react-linkify';
+import parse from 'html-react-parser';
 
 import type { MessageItem } from './App';
 import Keyboard, { Btn } from './Keyboard';
@@ -16,7 +17,11 @@ const Message = ({
   onClick: (msg: Btn) => void;
   disabled: boolean;
 }) => {
-  const { text, createdBy } = message;
+  let { text, createdBy } = message;
+  const makeSub = "(согласие откроется в новом окне, после ознакомления закройте страницу)"
+  if (text.includes(makeSub)) {
+    text = text.replace(makeSub, "<span style='font-size: 16px; color: grey;'>(согласие откроется в новом окне, после ознакомления закройте страницу)<span>")
+  }
   const author = createdBy === 'support' ? 'support' : 'user';
 
   return (
@@ -51,7 +56,7 @@ const Message = ({
               </a>
             )}
           >
-            {text}
+            {parse(text.replace("®", "<sup>®</sup>"))}
           </Linkify>
         </div>
       </div>

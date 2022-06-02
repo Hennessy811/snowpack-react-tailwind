@@ -16,7 +16,7 @@ export interface MessageItem {
   keyboard: string[][] | null;
   photo_url: null;
   rich_media: null;
-  text: string | null;
+  text: string ;
   user_id: string;
   video_url: null;
   createdBy?: string | 'support';

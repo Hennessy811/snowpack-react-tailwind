@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React from 'react';
+import parse from "html-react-parser";
 
 export interface BtnWithData {
   data: string;
@@ -45,7 +46,7 @@ const Keyboard = ({
               )}
               onClick={() => !disabled && onClick(btn)}
             >
-              {btnText(btn)}
+              {parse(btnText(btn).replace("®", "<sup>®</sup>"))}
             </div>
           ))}
         </div>
