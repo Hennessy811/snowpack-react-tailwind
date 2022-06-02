@@ -20,7 +20,7 @@ const Message = ({
   let { text, createdBy } = message;
   const makeSub = "(согласие откроется в новом окне, после ознакомления закройте страницу)"
   if (text.includes(makeSub)) {
-    text = text.replace(makeSub, "<span style='font-size: 16px; color: grey;'>(согласие откроется в новом окне, после ознакомления закройте страницу)<span>")
+    text = text.replace(makeSub, "<span style='font-size: 16px; color: grey; font-weight: 300;'>(согласие откроется в новом окне, после ознакомления закройте страницу)<span>")
   }
   const author = createdBy === 'support' ? 'support' : 'user';
 
